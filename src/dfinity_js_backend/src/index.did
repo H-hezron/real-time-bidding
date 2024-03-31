@@ -1,0 +1,21 @@
+service: () -> {
+    addAdvert: (record {title:text; details:text; adSlots:nat64; audienceType:text}) -> (variant {Ok:record {id:text; title:text; publisher:principal; createdAt:text; details:text; advertiser:opt text; budget:nat64; adSlots:nat64; audienceType:text}; Err:variant {PurchaseFailed:text; InvalidPayload:text; NotFound:text; PurchaseCompleted:text}});
+    addBid: (record {advertId:text; details:text; adSlots:nat64; amount:nat64}) -> (variant {Ok:record {id:text; advertId:text; details:text; adSlots:nat64; amount:nat64; advertiserId:text}; Err:variant {PurchaseFailed:text; InvalidPayload:text; NotFound:text; PurchaseCompleted:text}});
+    addUser: (record {userType:text; name:text; email:text}) -> (variant {Ok:record {id:text; userType:text; "principal":principal; name:text; email:text; adverts:vec text}; Err:variant {PurchaseFailed:text; InvalidPayload:text; NotFound:text; PurchaseCompleted:text}});
+    completePurchase: (principal, text, nat64, nat64, nat64) -> (variant {Ok:record {status:text; memo:nat64; publisher:principal; price:nat64; paid_at_block:opt nat64}; Err:variant {PurchaseFailed:text; InvalidPayload:text; NotFound:text; PurchaseCompleted:text}});
+    createPurchasePay: (text, text) -> (variant {Ok:record {status:text; memo:nat64; publisher:principal; price:nat64; paid_at_block:opt nat64}; Err:variant {PurchaseFailed:text; InvalidPayload:text; NotFound:text; PurchaseCompleted:text}});
+    getAddressFromPrincipal: (principal) -> (text) query;
+    getAdvert: (text) -> (variant {Ok:record {id:text; title:text; publisher:principal; createdAt:text; details:text; advertiser:opt text; budget:nat64; adSlots:nat64; audienceType:text}; Err:variant {PurchaseFailed:text; InvalidPayload:text; NotFound:text; PurchaseCompleted:text}}) query;
+    getAdvertBids: (text) -> (vec record {id:text; advertId:text; details:text; adSlots:nat64; amount:nat64; advertiserId:text}) query;
+    getAdverts: () -> (vec record {id:text; title:text; publisher:principal; createdAt:text; details:text; advertiser:opt text; budget:nat64; adSlots:nat64; audienceType:text}) query;
+    getBid: (text) -> (variant {Ok:record {id:text; advertId:text; details:text; adSlots:nat64; amount:nat64; advertiserId:text}; Err:variant {PurchaseFailed:text; InvalidPayload:text; NotFound:text; PurchaseCompleted:text}}) query;
+    getBids: () -> (vec record {id:text; advertId:text; details:text; adSlots:nat64; amount:nat64; advertiserId:text}) query;
+    getUser: (text) -> (variant {Ok:record {id:text; userType:text; "principal":principal; name:text; email:text; adverts:vec text}; Err:variant {PurchaseFailed:text; InvalidPayload:text; NotFound:text; PurchaseCompleted:text}}) query;
+    getUserAdverts: (text) -> (vec record {id:text; title:text; publisher:principal; createdAt:text; details:text; advertiser:opt text; budget:nat64; adSlots:nat64; audienceType:text}) query;
+    getUserByOwner: () -> (variant {Ok:record {id:text; userType:text; "principal":principal; name:text; email:text; adverts:vec text}; Err:variant {PurchaseFailed:text; InvalidPayload:text; NotFound:text; PurchaseCompleted:text}}) query;
+    getUsers: () -> (vec record {id:text; userType:text; "principal":principal; name:text; email:text; adverts:vec text}) query;
+    selectBid: (text) -> (variant {Ok:record {id:text; title:text; publisher:principal; createdAt:text; details:text; advertiser:opt text; budget:nat64; adSlots:nat64; audienceType:text}; Err:variant {PurchaseFailed:text; InvalidPayload:text; NotFound:text; PurchaseCompleted:text}});
+    updateAdvert: (record {id:text; details:text}) -> (variant {Ok:record {id:text; title:text; publisher:principal; createdAt:text; details:text; advertiser:opt text; budget:nat64; adSlots:nat64; audienceType:text}; Err:variant {PurchaseFailed:text; InvalidPayload:text; NotFound:text; PurchaseCompleted:text}});
+    updateUser: (record {id:text; userType:text; name:text; email:text}) -> (variant {Ok:record {id:text; userType:text; "principal":principal; name:text; email:text; adverts:vec text}; Err:variant {PurchaseFailed:text; InvalidPayload:text; NotFound:text; PurchaseCompleted:text}});
+    verifyPurchase: (principal, nat64, nat64, nat64) -> (bool) query;
+}
