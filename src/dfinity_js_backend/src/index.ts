@@ -100,6 +100,7 @@ const Bid = Record({
   adSlots: nat64,
   details: text,
   advertiserId: text,
+  status: text,
 });
 
 // Define payload structure for creating a bid
@@ -220,6 +221,7 @@ export default Canister({
     const bid = {
       id: uuidv4(),
       advertiserId: advertiser.id,
+      status: "pending",
       ...payload,
     };
     // Insert the bid into the bidsStorage
@@ -260,6 +262,10 @@ export default Canister({
     if ("None" in advertOpt) {
       return Err({ NotFound: `advert with id=${bid.advertId} not found` });
     }
+
+    bid.status = "selected";
+
+    bidsStorage.insert(bid.id, bid);
 
     const advert = advertOpt.Some;
     advert.advertiser = Some(bid.advertiserId);
@@ -314,12 +320,14 @@ export default Canister({
   }),
 
   // get adverts reserved by a user
-  getUserAdverts: query([text], Vec(Advert), (id) => {
-    const userOpt = usersStorage.get(id);
+  getUserAdverts: query([], Vec(Advert), () => {
+    const userOpt = usersStorage.values().filter((user) => {
+      return user.principal.toText() === ic.caller().toText();
+    });
     if ("None" in userOpt) {
       return [];
     }
-    const user = userOpt.Some;
+    const user = userOpt[0];
     return advertsStorage.values().filter((advert) => {
       return user.adverts.includes(advert.id);
     });
@@ -346,18 +354,20 @@ export default Canister({
 
   // Function to create a purchase pay
   createPurchasePay: update(
-    [text, text],
+    [text],
     Result(ReservePurchase, ErrorType),
-    (advertId, bidId) => {
+    (advertId) => {
       const advertOpt = advertsStorage.get(advertId);
-      const bidOpt = bidsStorage.get(bidId);
+      const bidOpt = bidsStorage.values().filter((bid) => {
+        return bid.advertId === advertId && bid.status === "selected";
+      });
       if ("None" in advertOpt) {
         return Err({
           NotFound: `cannot reserve Purchase: Advert  with id=${advertId} not available`,
         });
       }
       const advert = advertOpt.Some;
-      const bid = bidOpt.Some;
+      const bid = bidOpt[0];
 
       const publisherPrincipal = advert.publisher;
       // get publisher
@@ -366,8 +376,6 @@ export default Canister({
       });
 
       const publisher = publisherOpt[0].principal;
-
-      console.log(advert);
 
       const reservePurchase = {
         price: advert.budget,
@@ -381,6 +389,8 @@ export default Canister({
       const updatedAdvert = {
         ...advert,
         status: "completed",
+        advertiser: None,
+        budget: 0n,
         adSlots: advert.adSlots - bid.adSlots,
       };
 

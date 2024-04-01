@@ -55,8 +55,6 @@ function SelectBid({ advert, save }) {
     getUserOwner();
   }, [fetchBids]);
 
-  console.log(user, "user");
-
   return (
     <>
       {loading ? (
@@ -100,6 +98,7 @@ function SelectBid({ advert, save }) {
                         <td>{Number(bid.amount) / 10 ** 8} ICP</td>
                         <td>
                           {user?.adverts &&
+                            advert.advertiser.length === 0 &&
                             user?.adverts.includes(bid.advertId) && (
                               <Button
                                 variant="dark"

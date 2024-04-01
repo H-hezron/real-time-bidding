@@ -16,9 +16,9 @@ const AddUser = ({ save }) => {
 
   return (
     <>
-      <Button onClick={handleShow} className="btn btn-success-outline">
+      <button onClick={handleShow} className="btn btn-outline-success rounded-pill">
         <i className="bi bi-plus "></i> Create User profile
-      </Button>
+      </button>
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
           <Modal.Title>Create User profile</Modal.Title>

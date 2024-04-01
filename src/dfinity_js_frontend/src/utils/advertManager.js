@@ -69,12 +69,9 @@ export async function getAddressFromPrincipal(principal) {
   return await window.canister.advertManager.getAddressFromPrincipal(principal);
 }
 
-export async function payBid(advertId, bidId) {
+export async function payBid(advertId) {
   const advertManagerCanister = window.canister.advertManager;
-  const orderResponse = await advertManagerCanister.createPurchasePay(
-    advertId,
-    bidId
-  );
+  const orderResponse = await advertManagerCanister.createPurchasePay(advertId);
 
   console.log(orderResponse);
   const publisherPrincipal = Principal.from(orderResponse.Ok.publisher);

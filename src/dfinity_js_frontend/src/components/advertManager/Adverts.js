@@ -128,7 +128,6 @@ const Adverts = () => {
       selectBid(bidId).then((resp) => {
         getAdverts();
         console.log(resp.Ok);
-        bidPayment(resp.Ok.id, bidId);
         toast(<NotificationSuccess text="Bid selected successfully." />);
       });
     } catch (error) {
@@ -170,14 +169,10 @@ const Adverts = () => {
     }
   };
 
-  console.log(adverts);
-
   useEffect(() => {
     getAdverts();
     getUserOwner();
   }, []);
-
-  console.log(user);
 
   return (
     <>
@@ -189,12 +184,13 @@ const Adverts = () => {
             <div className="d-flex justify-content-between align-items-center mb-4">
               <h1 className="fs-4 fw-bold mb-0">Adverts Listings</h1>
               {/* get user payBidd advert */}
-              <Button
-                onClick={getOwnAdverts}
-                className="btn btn-primary-outline text"
+              <button
+                  onClick={getOwnAdverts}
+                  type="button"
+                className="btn btn-outline-info rounded-pill"
               >
                 My Adverts
-              </Button>
+              </button>
               <AddAdvert save={addAdvert} />
             </div>
             <Row xs={1} sm={2} lg={3} className="g-3  mb-5 g-xl-4 g-xxl-5">
@@ -204,6 +200,7 @@ const Adverts = () => {
                   advert={{
                     ..._advert,
                   }}
+                  user={user}
                   update={update}
                   selectBid={bidSelect}
                   addBid={newBid}

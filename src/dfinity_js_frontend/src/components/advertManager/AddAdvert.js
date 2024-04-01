@@ -16,12 +16,12 @@ const AddAdvert = ({ save }) => {
 
   return (
     <>
-      <Button
+      <button
         onClick={handleShow}
-        className="btn btn-outline-success text-white"
+        className="btn btn-outline-success rounded-pill"
       >
         <i className="bi bi-plus"></i> Add Advert
-      </Button>
+      </button>
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
           <Modal.Title>New Advert</Modal.Title>

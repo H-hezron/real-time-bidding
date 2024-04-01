@@ -5,8 +5,9 @@ import { Principal } from "@dfinity/principal";
 import UpdateAdvert from "./UpdateAdvert";
 import AddBid from "./AddBid";
 import SelectBid from "./AdvertBids";
+import Pay from "./Pay";
 
-const Advert = ({ advert, update, selectBid, addBid }) => {
+const Advert = ({ advert, user, update, selectBid, addBid }) => {
   const {
     id,
     title,
@@ -21,8 +22,6 @@ const Advert = ({ advert, update, selectBid, addBid }) => {
 
   const intBudget = Number(budget / BigInt(10 ** 8));
 
-  console.log(advert);
-
   const principal = window.auth.principalText;
   const isUsersAdvert = Principal.from(publisher).toText() === principal;
 
@@ -33,7 +32,10 @@ const Advert = ({ advert, update, selectBid, addBid }) => {
           <span className="font-monospace text-secondary">
             {Principal.from(publisher).toText()}
           </span>
-          <div className="d-flex align-items-center justify-content-between gap-2">
+          {advertiser.length > 0 && user.id === advertiser[0] && (
+            <Pay advert={advert} />
+          )}
+          <div className="d-flex align-items-center justify-content-between mt-2 gap-2">
             {advertiser.length > 0 && (
               <Badge bg="secondary" className="ms-auto">
                 Budget: {intBudget} ICP
